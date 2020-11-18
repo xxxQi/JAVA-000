@@ -10,10 +10,10 @@ public class SpringLoadBeanDemo {
     private final static String BEAN_PATH = "classpath:spring-bean.xml";
 
     public static void main(String[] args) {
-//        Student student = loadBeanByAnnotation(Student.class);
+        Student student = loadBeanByAnnotation(Student.class);
 //        Student student = loadBeanByXml( Student.class);
 //        Student student = loadBeanByFile(Student.class);
-        Student student = loadBeanByDefinition(Student.class);
+//        Student student = loadBeanByDefinition(Student.class);
         System.out.println(student.toString());
     }
 

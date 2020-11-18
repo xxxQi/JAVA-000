@@ -6,7 +6,12 @@
 
     <groupId>org.example</groupId>
     <artifactId>homework10</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>spring-starter</module>
+        <module>jdbc-example</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

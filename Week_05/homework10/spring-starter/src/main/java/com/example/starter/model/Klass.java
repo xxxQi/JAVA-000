@@ -1,16 +1,14 @@
-package com.example.entity;
+package com.example.starter.model;
 
 import lombok.Data;
 
 import java.util.List;
-
 @Data
-public class Klass { 
-    
+public class Klass {
+
     List<Student> students;
-    
-    public void dong(){
+
+    public void dong() {
         System.out.println(this.getStudents());
     }
-    
 }
