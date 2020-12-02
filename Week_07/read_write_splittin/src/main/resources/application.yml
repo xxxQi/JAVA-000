@@ -1,0 +1,30 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    master:
+      type: com.zaxxer.hikari.HikariDataSource
+      jdbc-url: jdbc:mysql://localhost:3306/geektime?useSSL=false&serverTimezone=UTC
+      username: root
+      password: root
+    slave:
+      - key: slave1
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://localhost:3306/geektime?useSSL=false&serverTimezone=UTC
+        username: root
+        password: root
+      - key: slave2
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://localhost:3306/geektime?useSSL=false&serverTimezone=UTC
+        username: root
+        password: root
+      - key: slave3
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://localhost:3306/geektime?useSSL=false&serverTimezone=UTC
+        username: root
+        password: root
+      - key: slave4
+        type: com.zaxxer.hikari.HikariDataSource
+        jdbc-url: jdbc:mysql://localhost:3306/geektime?useSSL=false&serverTimezone=UTC
+        username: root
+        password: root
