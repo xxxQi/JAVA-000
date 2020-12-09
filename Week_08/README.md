@@ -46,9 +46,9 @@ dataSourceCommon:
 
 dataSources:
   geektime_0:
-    url: jdbc:mysql://127.0.0.1:3306/geektime_1?serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/geektime_0?serverTimezone=UTC&useSSL=false
   geektime_1:
-    url: jdbc:mysql://127.0.0.1:3306/geektime_2?serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/geektime_1?serverTimezone=UTC&useSSL=false
 
 rules:
 - !SHARDING
@@ -109,4 +109,6 @@ SELECT * FROM `t_order`;
 ```
 
 2.（必做）基于 hmily TCC 或 ShardingSphere 的 Atomikos XA 实现一个简单的分布式事务应用 demo（二选一），提交到 Github。
+
+ [基于ShardingSphere](shardingsphere-xa-example/src/main/java/com/example/XAExampleApplication.java)
 
