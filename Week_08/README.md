@@ -1,114 +1,14 @@
-#学习笔记
-1.（必做）设计对前面的订单表数据进行水平分库分表，拆分 2 个库，每个库 16 张表。并在新结构在演示常见的增删改查操作。代码、sql 和配置文件，上传到 Github。
+## 第8周作业：
 
-- 下载shardingsphere-proxy根据本地拆分2个库，分别以geektime_geektime_${0..1}
-- 修改/config下的server.xml和config.sharding.yml
-- 启动/bin/start.bat脚本,登录proxy的mysql数据库，默认监控端口3307，账号，密码root
-- 根据config.sharding.yml配置文件进行数据分片,创建16张t_order表，完成增删改查实例
+-[ ] 1.（选做）分析前面作业设计的表，是否可以做垂直拆分。
 
-server.xml
-```
-    authentication:
-      users:
-        root:
-          password: root
-        sharding:
-          password: sharding 
-          authorizedSchemas: sharding_db
-    
-    props:
-      max-connections-size-per-query: 1
-      acceptor-size: 16  # The default value is available processors count * 2.
-      executor-size: 16  # Infinite by default.
-      proxy-frontend-flush-threshold: 128  
-      proxy-transaction-type: LOCAL
-      proxy-opentracing-enabled: false
-      proxy-hint-enabled: false
-      query-with-cipher-column: true
-      sql-show: false
-      check-table-metadata-enabled: false
-
-```
-
-config.sharding.yml
-```
-schemaName: sharding_db
-
-dataSourceCommon:
-  username: root
-  password: 123456
-  connectionTimeoutMilliseconds: 30000
-  idleTimeoutMilliseconds: 60000
-  maxLifetimeMilliseconds: 1800000
-  maxPoolSize: 50
-  minPoolSize: 1
-  maintenanceIntervalMilliseconds: 30000
-
-dataSources:
-  geektime_0:
-    url: jdbc:mysql://127.0.0.1:3306/geektime_0?serverTimezone=UTC&useSSL=false
-  geektime_1:
-    url: jdbc:mysql://127.0.0.1:3306/geektime_1?serverTimezone=UTC&useSSL=false
-
-rules:
-- !SHARDING
-  tables:
-    t_order:
-      actualDataNodes: geektime_${0..1}.t_order_${0..16}
-      tableStrategy:
-        standard:
-          shardingColumn: id
-          shardingAlgorithmName: t_order_inline
-      keyGenerateStrategy:
-        column: id
-        keyGeneratorName: snowflake
-  bindingTables:
-    - t_order
-  defaultDatabaseStrategy:
-    standard:
-      shardingColumn: id
-      shardingAlgorithmName: database_inline
-  defaultTableStrategy:
-    none:
-  
-  shardingAlgorithms:
-    database_inline:
-      type: INLINE
-      props:
-        algorithm-expression: geektime_${id % 2}
-    t_order_inline:
-      type: INLINE
-      props:
-        algorithm-expression: t_order_${id % 2}
-  
-  keyGenerators:
-    snowflake:
-      type: SNOWFLAKE
-      props:
-        worker-id: 123
-
-```
-db.sql
-```
-#创建16张t_order表
-CREATE TABLE IF NOT EXISTS `t_order` (
-  `id` bigint(20) NOT NULL COMMENT '订单 ID',
-  `order_no` varchar(20) NOT NULL COMMENT '订单编号',
-  `buyer_id` bigint(20) NOT NULL COMMENT '账号/买家 ID',
-  `seller_id` bigint(20) NOT NULL COMMENT '账号/卖家 ID',
-  `amount` decimal(8,2) NOT NULL COMMENT '订单金额',
-  `status` int(2) NOT NULL COMMENT '订单状态',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表';
-... 
-
-INSERT INTO `t_order`( `order_no`, `buyer_id`, `seller_id`, `amount`, `status`, `create_time`, `update_time`) VALUES (UUID_SHORT(), 1, 2, 0.00, 0, '2020-11-29 23:19:46', '2020-11-29 23:19:46');
-SELECT * FROM `t_order`;
-```
-
-2.（必做）基于 hmily TCC 或 ShardingSphere 的 Atomikos XA 实现一个简单的分布式事务应用 demo（二选一），提交到 Github。
-
- [基于ShardingSphere](shardingsphere-xa-example/src/main/java/com/example/XAExampleApplication.java)
-
+-[X] 2.（必做）设计对前面的订单表数据进行水平分库分表，拆分 2 个库，每个库 16 张表。并在新结构在演示常见的增删改查操作。代码、sql 和配置文件，上传到 Github。
+-[ ] 3.（选做）模拟 1000 万的订单单表数据，迁移到上面作业 2 的分库分表中。
+-[ ] 4.（选做）重新搭建一套 4 个库各 64 个表的分库分表，将作业 2 中的数据迁移到新分库。
+-[ ] 5.（选做）列举常见的分布式事务，简单分析其使用场景和优缺点。
+-[X] 6.（必做）基于 hmily TCC 或 ShardingSphere 的 Atomikos XA 实现一个简单的分布式事务应用 demo（二选一），提交到 Github。
+-[ ] 7.（选做）基于 ShardingSphere narayana XA 实现一个简单的分布式事务 demo。
+-[ ] 8.（选做）基于 seata 框架实现 TCC 或 AT 模式的分布式事务 demo。
+-[ ] 9.（选做☆）设计实现一个简单的 XA 分布式事务框架 demo，只需要能管理和调用 2 个 MySQL 的本地事务即可，不需要考虑全局事务的持久化和恢复、高可用等。
+-[ ] 10.（选做☆）设计实现一个 TCC 分布式事务框架的简单 Demo，需要实现事务管理器，不需要实现全局事务的持久化和恢复、高可用等。
+-[ ] 11.（选做☆）设计实现一个 AT 分布式事务框架的简单 Demo，仅需要支持根据主键 id 进行的单个删改操作的 SQL 或插入操作的事务。
